@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  openconnect:
+    image: jasper/openconnect:latest
+    build:
+      context: ./
+    container_name: openconnect
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    dns:
+      - 172.25.21.1
+      - 172.25.21.2
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    env_file: .env
+    networks:
+      - openconnect
+    ports:
+      - ${PROXY_PORT}:${PROXY_PORT}
+    restart: always
+    privileged: true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10M"
+        max-file: "10"
+
+networks:
+  openconnect:
+    name: openconnect
+    ipam:
+      config:
+        - subnet: 172.71.0.1/16

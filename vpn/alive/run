@@ -1,0 +1,6 @@
+#!/bin/sh
+while :
+do
+  ping -i 10 -q keepalive.yourcompany.com
+done
+

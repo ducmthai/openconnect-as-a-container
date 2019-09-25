@@ -1,0 +1,35 @@
+#!/bin/sh
+if [ -z "$SERVER" ]; then
+  SERVER=vpn-mfa.yourcompany.com
+fi
+if [ -z "$USERNAME" ]; then
+  USERNAME=<Username>  
+fi
+if [ -z "$PASSWORD1" ]; then
+  PASSWORD1=<Password1>
+fi
+if [ -z "$PASSWORD2" ]; then
+  PASSWORD2=<Password2>
+fi
+echo Running openconnect
+(echo -e "${PASSWORD1}\n${PASSWORD2}"; read -s) | openconnect ${SERVER} --passwd-on-stdin --no-dtls -b -u ${USERNAME}
+sleep 3
+
+echo RUNNING Privoxy
+sleep 3
+# so return traffic that went through VPN works
+gw=$(ip route | awk '/default/ {print $3}')
+echo Gw is ${gw}
+ip route add to ${LOCAL_NETWORK} via $gw dev eth0
+
+if [ -z "${PROXY_PORT}" ]; then
+  PROXY_PORT=3129
+fi
+count=$(grep -c "listen-address" /vpn/privoxy/config)
+if [ ${count} == 0 ]; then
+  echo "listen-address  0.0.0.0:${PROXY_PORT}" >> /vpn/privoxy/config 
+fi
+
+# start
+
+privoxy --no-daemon
