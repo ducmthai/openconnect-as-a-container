@@ -1,0 +1,34 @@
+#!/bin/bash
+if [ -z "$SERVER" ]; then
+  echo "No server is set. Exiting."
+  exit 1
+fi
+if [ -z "$USERNAME" ]; then
+  echo "No username is set. Exiting."
+  exit 1 
+fi
+if [ -z "$PASSWORD" ]; then
+  echo "No password is set. Exiting."
+  exit 1
+fi
+if [ -z "${PROXY_PORT}" ]; then
+  echo "No port is set, exiting"
+  exit 1
+fi
+
+echo Running openconnect
+(echo -e "${PASSWORD}\n1"; read -s) | openconnect ${SERVER} --passwd-on-stdin --no-dtls -b -u ${USERNAME}
+sleep 3
+
+# so return traffic that went through VPN works
+gw=$(ip route | awk '/default/ {print $3}')
+ip route add to ${LOCAL_NETWORK} via $gw dev eth0
+
+# start
+if [[ -n "$SUSERNAME" -a -n "$SPASSWORD" ]]; then
+  echo "Running brook with authentication"
+  brook socks5 -l :${PROXY_PORT} -i 0.0.0.0 --username ${SUSERNAME} --password ${SPASSWORD} &> /dev/null
+else
+  echo "Running brook without authentication"
+  brook socks5 -l :${PROXY_PORT} -i 0.0.0.0 &> /dev/null
+fi

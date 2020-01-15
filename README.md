@@ -2,7 +2,8 @@
 An Alpine Linux container with 
 
 - VPN connection to your corporate network via [`openconnect`](https://github.com/openconnect). `openconnect` can connect to AnyConnect, Pulse and PAN.
-- Web proxy with Privoxy
+- Socks5 proxy with [brook](https://github.com/txthinking/brook)
+
 - The container starts in [`privileged`](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) mode in order to avoid the `read-only file system` [error](https://serverfault.com/questions/878443/when-running-vpnc-in-docker-get-cannot-open-proc-sys-net-ipv4-route-flush). Please proceed with your own **risk**.
 
 ## Starting the VPN Proxy
@@ -43,7 +44,7 @@ docker-compose up -d
 
 ## Connecting to the VPN Proxy
 
-Set your proxy to 127.0.0.1:${PROXY_PORT}.
+Set your proxy to socks5://127.0.0.1:${PROXY_PORT}.
 
 ## Tested environments
 - Raspberry Pi 4 B+ (4GB model)

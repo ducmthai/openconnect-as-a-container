@@ -1,6 +1,11 @@
 #!/bin/sh
+if [ -z "$KEEP_ALIVE_ENDPOINT" ]; then
+  echo "No keep alive endpoint server is set. Exiting."
+  exit 1
+fi
+
 while :
 do
-  ping -i 10 -q keepalive.yourcompany.com
+  ping -i 10 -q ${KEEP_ALIVE_ENDPOINT}
 done
 
