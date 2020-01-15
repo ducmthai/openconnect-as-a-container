@@ -3,21 +3,29 @@ if [ -z "$SERVER" ]; then
   echo "No server is set. Exiting."
   exit 1
 fi
+
 if [ -z "$USERNAME" ]; then
   echo "No username is set. Exiting."
   exit 1 
 fi
-if [ -z "$PASSWORD" ]; then
-  echo "No password is set. Exiting."
+
+if [ -z "$PASSWORD1" ]; then
+  echo "No password1 is set. Exiting."
   exit 1
 fi
+
+if [ -z "$PASSWORD2" ]; then
+  echo "No password2 is set. Exiting."
+  exit 1
+fi
+
 if [ -z "${PROXY_PORT}" ]; then
   echo "No port is set, exiting"
   exit 1
 fi
 
 echo Running openconnect
-(echo -e "${PASSWORD}\n1"; read -s) | openconnect ${SERVER} --passwd-on-stdin --no-dtls -b -u ${USERNAME}
+(echo -e "${PASSWORD1}\n${PASSWORD2}"; read -s) | openconnect ${SERVER} --passwd-on-stdin --no-dtls -b -u ${USERNAME}
 sleep 3
 
 # so return traffic that went through VPN works

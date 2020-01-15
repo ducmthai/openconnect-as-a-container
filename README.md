@@ -41,10 +41,12 @@ docker-compose up -d
 ### Environment Variables
 
 `LOCAL_NETWORK` - The CIDR mask of the local IP addresses (e.g. 192.168.0.1/24, 10.1.1.0/24) which will be acessing the proxy. This is so the response to a request can be returned to the client (i.e. your browser).
+`SUSERNAME` - Socks5 username (optional).
+`SPASSWORD` - Socks5 password.
 
 ## Connecting to the VPN Proxy
 
-Set your proxy to socks5://127.0.0.1:${PROXY_PORT}.
+Set your proxy to socks5://127.0.0.1:${PROXY_PORT}. Use Socks5 username and password if set.
 
 ## Tested environments
 - Raspberry Pi 4 B+ (4GB model)
