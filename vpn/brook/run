@@ -24,13 +24,13 @@ if [ -z "${PROXY_PORT}" ]; then
   exit 1
 fi
 
-echo Running openconnect
-(echo -e "${PASSWORD1}\n${PASSWORD2}"; read -s) | openconnect ${SERVER} --passwd-on-stdin --no-dtls -b -u ${USERNAME}
-sleep 3
-
 # so return traffic that went through VPN works
 gw=$(ip route | awk '/default/ {print $3}')
 ip route add to ${LOCAL_NETWORK} via $gw dev eth0
+
+echo Running openconnect
+(echo -e "${PASSWORD1}\n${PASSWORD2}"; read -s) | openconnect ${SERVER} --passwd-on-stdin --no-dtls -b -u ${USERNAME}
+sleep 3
 
 # start
 if [[ -n "$SUSERNAME" -a -n "$SPASSWORD" ]]; then

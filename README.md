@@ -1,4 +1,6 @@
 # Proxy through VPN connection in a Docker container
+![openconnect](vpncontainer.png)
+
 An Alpine Linux container with 
 
 - VPN connection to your corporate network via [`openconnect`](https://github.com/openconnect). `openconnect` can connect to AnyConnect, Pulse and PAN.
