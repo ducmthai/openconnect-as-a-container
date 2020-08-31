@@ -12,16 +12,23 @@ An Alpine Linux container with
 
 ### `vpn.config`
 
-The main configuration file. This should be the only file which needs user modifications.
+The main configuration file, contain the following values:
 
 - `SERVER`: VPN endpoint
 - `USERNAME`: Login username
 - `PASSWORD1`: Login primary password
 - `PASSWORD2`: OTP password or prompt response
-- `PROXY_PORT`: Proxy port
-- `LOCAL_NETWORK` - The CIDR mask of the local IP addresses (e.g. 192.168.0.1/24, 10.1.1.0/24) which will be acessing the proxy. This is so the response to a request can be returned to the client (i.e. your browser).
 - `SUSERNAME` - Socks5 username (optional).
 - `SPASSWORD` - Socks5 password.
+
+### Environment variables
+
+The environment variables needed for exposing the proxy to the local network:
+
+- `PROXY_PORT`: Proxy port
+- `LOCAL_NETWORK`: The CIDR mask of the local IP addresses (e.g. 192.168.0.1/24, 10.1.1.0/24) which will be acessing the proxy. This is so the response to a request can be returned to the client (i.e. your browser).
+
+These variables can be specified in the command line or in the `.env` file in the case of `docker-compose`.
 
 ### Start with `docker run`
 
@@ -34,6 +41,8 @@ docker run -d \
 --dns=172.25.21.1 --dns=172.25.21.1 \
 --privileged=true \
 --restart=always \
+-e "PROXY_PORT=3128" \
+-e "LOCAL_NETWORK=192.168.0.1/24" \
 -v /etc/localtime:/etc/localtime:ro \
 -v "$(pwd)"/vpn.config:/vpn/vpn.config:ro \
 -p 3129:3129 \

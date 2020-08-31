@@ -4,6 +4,7 @@ services:
     image: ducmthai/openconnect:latest
     build:
       context: ./
+    env_file: .env
     container_name: openconnect
     cap_add:
       - NET_ADMIN
