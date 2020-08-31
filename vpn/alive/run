@@ -1,7 +1,9 @@
 #!/bin/sh
-if [ ! -r /vpn/vpn.config ] ; then
-        echo "Could not load config file from /vpn/vpn.config. Please check your volume config" 1>&2
-        exit 1
+set -e -u -o pipefail
+
+if [ ! -r /vpn/vpn.config ]; then
+  echo "Could not load config file from /vpn/vpn.config. Please check your volume config" 1>&2
+  exit 1
 fi
 
 source /vpn/vpn.config
@@ -11,8 +13,6 @@ if [ -z "$KEEP_ALIVE_ENDPOINT" ]; then
   exit 1
 fi
 
-while :
-do
+while :; do
   ping -i 10 -q ${KEEP_ALIVE_ENDPOINT}
 done
-
