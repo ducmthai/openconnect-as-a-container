@@ -10,8 +10,23 @@ An Alpine Linux container with
 
 ## Starting the VPN Proxy
 
+### `vpn.config`
+
+The main configuration file. This should be the only file which needs user modifications.
+
+- `SERVER`: VPN endpoint
+- `USERNAME`: Login username
+- `PASSWORD1`: Login primary password
+- `PASSWORD2`: OTP password or prompt response
+- `PROXY_PORT`: Proxy port
+-`LOCAL_NETWORK` - The CIDR mask of the local IP addresses (e.g. 192.168.0.1/24, 10.1.1.0/24) which will be acessing the proxy. This is so the response to a request can be returned to the client (i.e. your browser).
+- `SUSERNAME` - Socks5 username (optional).
+- `SPASSWORD` - Socks5 password.
+
+### Start with `docker run`
+
 ```Shell
-docker build -t jasper/openconnect .
+docker build -t ducmthai/openconnect .
 docker run -d \
 --cap-add=NET_ADMIN \
 --device=/dev/net/tun \
@@ -19,34 +34,19 @@ docker run -d \
 --dns=172.25.21.1 --dns=172.25.21.1 \
 --privileged=true \
 --restart=always \
--e "SERVER=<vpn-mfa.yourcompany.com" \
--e "USERNAME=<vpn_username>" \
--e "PASSWORD1=<vpn_password>" \
--e "PASSWORD2=<token>" \
--e "LOCAL_NETWORK=192.168.1.0/24" \
--e "PROXY_PORT=3129" \
 -v /etc/localtime:/etc/localtime:ro \
+-v "$(pwd)"/vpn.config:/vpn/vpn.config:ro \
 -p 3129:3129 \
-jasper/openconnect
+ducmthai/openconnect
 ```
 
-Substitute the environment variables for `SERVER`, `USERNAME`, `PASSWORD1`, `PASSWORD2`, `LOCAL_NETWORK` and `PROXY_PORT` as indicated.
+### Start with `docker-compose`
 
-A `docker-compose.yml` file is also provided. Edit `.env` to the values on your setup for `USERNAME` and `PASSWORD1`, as well as your `LOCAL_NETWORK` cidr.
-
-Then start the container:
+A `docker-compose.yml` file is also provided:
 
 ```Shell
 docker-compose up -d
 ```
-
-### Environment Variables
-
-`LOCAL_NETWORK` - The CIDR mask of the local IP addresses (e.g. 192.168.0.1/24, 10.1.1.0/24) which will be acessing the proxy. This is so the response to a request can be returned to the client (i.e. your browser).
-
-`SUSERNAME` - Socks5 username (optional).
-
-`SPASSWORD` - Socks5 password.
 
 ## Connecting to the VPN Proxy
 

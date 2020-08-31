@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   openconnect:
-    image: jasper/openconnect:latest
+    image: ducmthai/openconnect:latest
     build:
       context: ./
     container_name: openconnect
@@ -14,7 +14,7 @@ services:
       - 172.25.21.2
     volumes:
       - /etc/localtime:/etc/localtime:ro
-    env_file: .env
+      - ./vpn.config:/vpn/vpn.config:ro
     networks:
       - openconnect
     ports:
@@ -32,4 +32,4 @@ networks:
     name: openconnect
     ipam:
       config:
-        - subnet: 172.71.0.1/16
+        - subnet: 198.51.100.1/24

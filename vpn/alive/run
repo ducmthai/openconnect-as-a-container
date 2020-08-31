@@ -1,4 +1,11 @@
 #!/bin/sh
+if [ ! -r /vpn/vpn.config ] ; then
+        echo "Could not load config file from /vpn/vpn.config. Please check your volume config" 1>&2
+        exit 1
+fi
+
+source /vpn/vpn.config
+
 if [ -z "$KEEP_ALIVE_ENDPOINT" ]; then
   echo "No keep alive endpoint server is set. Exiting."
   exit 1

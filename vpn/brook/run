@@ -1,4 +1,12 @@
 #!/bin/bash
+if [ ! -r /vpn/vpn.config ] ; then
+        echo "Could not load config file from /vpn/vpn.config. Please check your volume config" 1>&2
+        exit 1
+fi
+
+source /vpn/vpn.config
+
+
 if [ -z "$SERVER" ]; then
   echo "No server is set. Exiting."
   exit 1
@@ -35,8 +43,8 @@ sleep 3
 # start
 if [[ -n "$SUSERNAME" -a -n "$SPASSWORD" ]]; then
   echo "Running brook with authentication"
-  brook socks5 -l :${PROXY_PORT} -i 0.0.0.0 --username ${SUSERNAME} --password ${SPASSWORD} &> /dev/null
+  brook socks5 --socks5 0.0.0.0:${PROXY_PORT} --username ${SUSERNAME} --password ${SPASSWORD} &> /dev/null
 else
   echo "Running brook without authentication"
-  brook socks5 -l :${PROXY_PORT} -i 0.0.0.0 &> /dev/null
+  brook socks5 --socks5 0.0.0.0:${PROXY_PORT} &> /dev/null
 fi
