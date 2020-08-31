@@ -19,7 +19,7 @@ The main configuration file. This should be the only file which needs user modif
 - `PASSWORD1`: Login primary password
 - `PASSWORD2`: OTP password or prompt response
 - `PROXY_PORT`: Proxy port
--`LOCAL_NETWORK` - The CIDR mask of the local IP addresses (e.g. 192.168.0.1/24, 10.1.1.0/24) which will be acessing the proxy. This is so the response to a request can be returned to the client (i.e. your browser).
+- `LOCAL_NETWORK` - The CIDR mask of the local IP addresses (e.g. 192.168.0.1/24, 10.1.1.0/24) which will be acessing the proxy. This is so the response to a request can be returned to the client (i.e. your browser).
 - `SUSERNAME` - Socks5 username (optional).
 - `SPASSWORD` - Socks5 password.
 
