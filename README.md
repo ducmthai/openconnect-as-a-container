@@ -41,7 +41,12 @@ Passwords can be set using a `FILE__` prefixed environment variable where its va
 FILE__PASSWORD1=/vpn/passwd1
 FILE__PASSWORD2=/vpn/passwd2
 ```
+### Create a docker network
+Before starting the container, please creat a docker network for it:
 
+```Shell
+docker network create anyconnect --subnet=10.30.0.1/16
+```
 ### Start with `docker run`
 
 ```Shell
