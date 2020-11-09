@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv sh
+echo -e "/var/run/openconnect.pid" > /var/run/s6/container_environment/OC_PID
+
+gw=$(ip route | awk '/default/ {print $3}')
+ip route add to ${LOCAL_NETWORK} via $gw dev eth0
+
+echo -e "\nlisten-address  0.0.0.0:${HTTP_PROXY_PORT}" >>/etc/privoxy/config

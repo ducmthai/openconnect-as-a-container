@@ -1,12 +1,10 @@
-#!/bin/sh
+#!/usr/bin/with-contenv sh
 set -e -u -o pipefail
 
-if [ ! -r /vpn/vpn.config ]; then
-  echo "Could not load config file from /vpn/vpn.config. Please check your volume config" 1>&2
-  exit 1
-fi
+while ! $(ip link | grep -q tun0); do sleep 1; done
+echo "Keepalive: Openconnect is running"
 
-source /vpn/vpn.config
+source ${OC_CFG}
 
 if [ -z "$KEEP_ALIVE_ENDPOINT" ]; then
   echo "No keep alive endpoint server is set. Exiting."
@@ -16,3 +14,4 @@ fi
 while :; do
   ping -i 10 -q ${KEEP_ALIVE_ENDPOINT}
 done
+

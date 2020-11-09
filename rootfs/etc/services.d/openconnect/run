@@ -1,0 +1,39 @@
+#!/usr/bin/with-contenv bash
+set -e -u -o pipefail
+
+if [ ! -r ${OC_CFG} ]; then
+  echo "Could not load config file from /vpn/vpn.config. Please check your volume config" 1>&2
+  exit 1
+fi
+
+source ${OC_CFG}
+
+if [ -z "$SERVER" ]; then
+  echo "No server is set. Exiting."
+  exit 1
+fi
+
+if [ -z "$USERNAME" ]; then
+  echo "No username is set. Exiting."
+  exit 1
+fi
+
+if [ -z "$PASSWORD1" ]; then
+  echo "No password1 is set. Exiting."
+  exit 1
+fi
+
+if [ -z "$PASSWORD2" ]; then
+  echo "No password2 is set. Exiting."
+  exit 1
+fi
+
+echo Running openconnect
+(
+  echo -e "${PASSWORD1}\n${PASSWORD2}"
+  read -s
+) | openconnect ${SERVER} --pid-file=${OC_PID} --user=${USERNAME} --passwd-on-stdin --no-dtls
+
+sleep infinity &
+
+wait

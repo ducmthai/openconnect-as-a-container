@@ -1,0 +1,25 @@
+#!/usr/bin/with-contenv bash
+
+if [ ! -r ${OC_CFG} ]; then
+  echo "Could not load config file from /vpn/vpn.config. Please check your volume config" 1>&2
+  exit 1
+fi
+
+source ${OC_CFG}
+
+if [ -z "${PROXY_PORT}" ]; then
+  echo "SOCKS5 is not enabled"
+  sleep infinity
+fi
+
+while ! $(ip link | grep -q tun0); do sleep 1; done
+echo "Brook: Openconnect is running"
+
+# start
+if [ -n "$SUSERNAME" ] && [ -n "$SPASSWORD" ]; then
+  echo "Running brook with authentication"
+  brook socks5 --socks5 0.0.0.0:${PROXY_PORT} --username ${SUSERNAME} --password ${SPASSWORD}
+else
+  echo "Running brook without authentication"
+  brook socks5 --socks5 0.0.0.0:${PROXY_PORT}
+fi

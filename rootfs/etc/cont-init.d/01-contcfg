@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [[ "$(ls /var/run/s6/container_environment/ | xargs)" == *"FILE__"* ]]; then
+  for FILENAME in /var/run/s6/container_environment/*; do
+    if [[ "${FILENAME##*/}" == "FILE__"* ]]; then
+      SECRETFILE=$(cat ${FILENAME})
+      if [[ -f ${SECRETFILE} ]]; then
+        FILESTRIP=${FILENAME//FILE__/}
+        cat ${SECRETFILE} > ${FILESTRIP}
+        echo "[env-init] ${FILESTRIP##*/} set from ${FILENAME##*/}"
+      else
+        echo "[env-init] cannot find secret in ${FILENAME##*/}"
+      fi
+    fi
+  done
+fi
+
+if [ ! -r /vpn/vpn.config ]; then
+  echo "Could not load config file from /vpn/vpn.config. Please check your volume config" 1>&2
+  exit 1
+fi
+
+echo "/vpn/vpn.config" > /var/run/s6/container_environment/OC_CFG
