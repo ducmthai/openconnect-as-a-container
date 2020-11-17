@@ -7,6 +7,8 @@ services:
     container_name: openconnect
     cap_add:
       - NET_ADMIN
+      - NET_RAW
+      - SYS_MODULE
     devices:
       - /dev/net/tun
     dns:
@@ -26,9 +28,9 @@ services:
     restart: always
     privileged: true
     sysctls:
-      - net.ipv6.conf.all.disable_ipv6=1
-      - net.ipv6.conf.default.disable_ipv6=1
-      - net.ipv6.conf.lo.disable_ipv6=1    
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv6.conf.default.disable_ipv6=0
+      - net.ipv6.conf.lo.disable_ipv6=0
       - net.ipv4.tcp_keepalive_intvl=45
       - net.ipv4.tcp_keepalive_probes=15
       - net.ipv4.tcp_keepalive_time=300      
