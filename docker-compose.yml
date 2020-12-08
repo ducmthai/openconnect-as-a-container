@@ -12,8 +12,8 @@ services:
     devices:
       - /dev/net/tun
     dns:
-      - 172.25.21.1
-      - 172.25.21.2
+      - 1.1.1.1
+      - 1.0.0.1
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./vpn.config:/vpn/vpn.config:ro
@@ -39,6 +39,11 @@ services:
       options:
         max-size: "10M"
         max-file: "10"
+    healthcheck:
+      test: /opt/utils/healthcheck.sh ${EXT_IP}
+      timeout: 10s
+      interval: 3m
+      retries: 2
 
 networks:
   openconnect:
