@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv sh
+while ! $(ip link | grep -q tun0); do sleep 1; done
+
+echo "Starting dnsmasq..."
+dnsmasq --no-daemon --log-queries
+
+sleep infinity &
+
+wait

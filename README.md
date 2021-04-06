@@ -1,6 +1,7 @@
 # AnyConnect, Pulse and PAN container with proxies
 ## Changelog
 
+- v20210405: Set dynamic token through mounted file to `/vpn/token` for 2FA users. Rename `PASSWORD1` and `PASSWORD2` to `PASSWORD` and `TOKEN`, respectively. Add `dnsmasq`.
 - v20201208: Replace `brook` + `ufw` combo with `3proxy`. Reduce image size significantly.
 - v20201116: Enable IPv6to4 fallback.
 - v20201109: Use `s6-overlay` instead of `runit`. This change allow setting an environment variable through a file via prefix `FILE__`.
@@ -44,13 +45,12 @@ The main configuration file, contain the following values:
 
 - `SERVER`: VPN endpoint
 - `USERNAME`: Login username
-- `PASSWORD1`: Login primary password
-- `PASSWORD2`: OTP password or prompt response
+- `PASSWORD`: Login primary password
+- `DYNAMIC_TOKEN`: `true` if dynamic OTP is required, `false` otherwise.
 - `PROXY_USER`: Proxy username (optional).
 - `PROXY_PASS`: Proxy password.
 - `KEEP_ALIVE_ENDPOINT`: An endpoint (can be internal or external) to keep the VPN connection alive
 
-Will set the environment variable PASSWORD based on the contents of the /run/secrets/mysecretpassword file.
 ### Environment variables
 
 The environment variables needed for exposing the proxy to the local network:
@@ -67,8 +67,7 @@ These variables can be specified in the command line or in the `.env` file in th
 Passwords can be set using a `FILE__` prefixed environment variable where its value is path to the file contains the password:
 
 ```Shell
-FILE__PASSWORD1=/vpn/passwd1
-FILE__PASSWORD2=/vpn/passwd2
+FILE__PASSWORD=/vpn/passwd
 ```
 ### Create a docker network
 Before starting the container, please create a docker network for it:
@@ -90,13 +89,12 @@ docker run -d \
 -e "PROXY_PORT=3128" \
 -e "HTTP_PROXY_PORT=3129" \
 -e "LOCAL_NETWORK=192.168.0.1/24" \
--e "FILE__PASSWORD1=/vpn/passwd1" \
--e "FILE__PASSWORD2=/vpn/passwd2" \
+-e "FILE__PASSWORD=/vpn/passwd" \
 -e "EXT_IP=<get_yours_at_ifconfig.co/ip> \
 -v /etc/localtime:/etc/localtime:ro \
 -v "$(pwd)"/vpn.config:/vpn/vpn.config:ro \
--v "$(pwd)"/vpnpasswd1:/vpn/passwd1:ro \
--v "$(pwd)"/vpnpasswd2:/vpn/passwd2:ro \
+-v "$(pwd)"/vpnpasswd:/vpn/passwd:ro \
+-v "$(pwd)"/vpntoken:/vpn/token \
 -p 3128:3128 \
 -p 3129:3129 \
 ducmthai/openconnect
@@ -110,10 +108,17 @@ A `docker-compose.yml` file is also provided:
 docker-compose up -d
 ```
 
+### Supplying token
+Token is taken from the file `/vpn/token` within the container. If `DYNAMIC_TOKEN` is `true` then the container clears the file after reading. To supply the dynamic OTP, simply do this outside the container:
+
+```Shell
+echo OTP_HERE > ./vpntoken
+```
+
 ## Connecting to the VPN Proxy
 
 Set your proxy to socks5://127.0.0.1:${PROXY_PORT}. Use Socks5 username and password if set.
 
 ## Tested environments
 - Raspberry Pi 4 B+ (4GB model)
-- WSL 2 + Docker WSL2 technical preview (2.1.2.0) + Proxifier
+- WSL 2 + Docker WSL2 + Proxifier

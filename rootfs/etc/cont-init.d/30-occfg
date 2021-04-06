@@ -1,8 +1,9 @@
 #!/usr/bin/with-contenv sh
-echo -e "/var/run/openconnect.pid" >/var/run/s6/container_environment/OC_PID
+echo -e "/var/run/openconnect.pid" > /var/run/s6/container_environment/OC_PID
 
-gw=$(ip route | awk '/default/ {print $3}')
-ip route add ${LOCAL_NETWORK} via $gw dev eth0
+# Save pre-VPN default gateway
+echo -e "$(ip route | awk '/default/ {print $3}')" > /var/run/s6/container_environment/DEFAULT_GW
+
 
 if [ ! -f /etc/3proxy/updated ]; then
   if [ -n "${PROXY_USER}" ] && [ -n "${PROXY_PASS}" ]; then

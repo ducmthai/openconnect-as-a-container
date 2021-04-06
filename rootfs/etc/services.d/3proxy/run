@@ -1,5 +1,8 @@
 #!/usr/bin/with-contenv sh
 while ! $(ip link | grep -q tun0); do sleep 1; done
-echo "openconnect is running"
 
+echo "Adding route to ${LOCAL_NETWORK} via ${DEFAULT_GW}"
+ip route add ${LOCAL_NETWORK} via ${DEFAULT_GW} dev eth0
+
+echo "Starting 3proxy..."
 3proxy /etc/3proxy/3proxy.cfg
