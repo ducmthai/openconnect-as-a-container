@@ -35,7 +35,9 @@ echo "@community http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/ap
 apk upgrade --update --no-cache && \
 apk --update --no-cache add \
   bash \
-  openconnect@community && \
+  tzdata \
+  openconnect@community \
+  dnsmasq && \
 echo "Extracting s6 overlay..." && \
   tar xzf /tmp/s6overlay.tar.gz -C / && \
   chmod +x /opt/utils/healthcheck.sh && \
