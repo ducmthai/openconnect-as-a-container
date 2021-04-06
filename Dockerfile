@@ -1,5 +1,5 @@
 # Alpine version
-ARG ALPINE_VERSION=3.12.1
+ARG ALPINE_VERSION=3.13.4
 # 3proxy version
 ARG THREE_PROXY_REPO=https://github.com/z3APA3A/3proxy
 ARG THREE_PROXY_BRANCH=0.9.3
