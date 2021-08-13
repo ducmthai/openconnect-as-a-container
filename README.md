@@ -1,6 +1,7 @@
 # AnyConnect, Pulse and PAN container with proxies
 ## Changelog
 
+- v20210813: Fix mount vpnpassd typo in `docker-compose.yml`. Add a note regarding password editing with `vim.`
 - v20210405: Set dynamic token through mounted file to `/vpn/token` for 2FA users. Rename `PASSWORD1` and `PASSWORD2` to `PASSWORD` and `TOKEN`, respectively. Add `dnsmasq`.
 - v20201208: Replace `brook` + `ufw` combo with `3proxy`. Reduce image size significantly.
 - v20201116: Enable IPv6to4 fallback.
@@ -63,13 +64,15 @@ The environment variables needed for exposing the proxy to the local network:
 
 These variables can be specified in the command line or in the `.env` file in the case of `docker-compose`.
 
-### Set password via file
+### Set password in a file
 
 Passwords can be set using a `FILE__` prefixed environment variable where its value is path to the file contains the password:
 
 ```Shell
 FILE__PASSWORD=/vpn/passwd
 ```
+**Note**: If you edit the file with `vim,` please ensure to do `:set nofixeol` in `vim` before saving it or else a newline will be added after the password.
+
 ### Create a docker network
 Before starting the container, please create a docker network for it:
 

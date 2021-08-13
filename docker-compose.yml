@@ -15,7 +15,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./vpn.config:/vpn/vpn.config:ro
-      - ./vpnpasswd:/vpn/passwd1:ro
+      - ./vpnpasswd:/vpn/passwd:ro
       - ./vpntoken:/vpn/token
     env_file: .env
     networks:
