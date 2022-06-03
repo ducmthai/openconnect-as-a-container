@@ -1,6 +1,7 @@
 # AnyConnect, Pulse and PAN container with proxies
 ## Changelog
 
+- v20220603: Add a `build.sh` script. Set s6-overlay version to 2.2.0.3. Update to version 3 pending.
 - v20210813: Fix mount vpnpassd typo in `docker-compose.yml`. Add a note regarding password editing with `vim.`
 - v20210405: Set dynamic token through mounted file to `/vpn/token` for 2FA users. Rename `PASSWORD1` and `PASSWORD2` to `PASSWORD` and `TOKEN`, respectively. Add `dnsmasq`.
 - v20201208: Replace `brook` + `ufw` combo with `3proxy`. Reduce image size significantly.
@@ -28,7 +29,14 @@ ARG s6_arch=<your_platform_arch>
 See [s6-overlay release page](https://github.com/just-containers/s6-overlay/releases/latest) to see if your platform is available. The argument can be set using `--build-arg` as below.
 
 ### Build the image
-Build the image with `docker` with BuiltKit enabled:
+
+Use `build.sh`:
+
+```Shell
+sh build.sh amd64
+```
+
+Or, build the image with `docker` with BuiltKit enabled:
 
 ```Shell
 DOCKER_BUILDKIT=1 docker build --build-arg s6_arch=amd64 -t ducmthai:nord .

@@ -27,7 +27,9 @@ COPY --from=builder /3proxy-${THREE_PROXY_BRANCH}/bin /usr/local/bin
 
 # Select S6 runtime architecture: aarch64|amd64 (more on https://github.com/just-containers/s6-overlay/releases/latest)
 ARG s6_arch=amd64
-ADD https://github.com/just-containers/s6-overlay/releases/latest/download/s6-overlay-${s6_arch}.tar.gz /tmp/s6overlay.tar.gz
+ARG s6_version=2.2.0.3
+
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${s6_version}/s6-overlay-${s6_arch}.tar.gz /tmp/s6overlay.tar.gz
 
 ADD rootfs /
 RUN \
