@@ -51,7 +51,7 @@ RUN S6_OVERLAY_URL_PREFIX="https://github.com/just-containers/s6-overlay/release
     && echo "Download latest vpnc-script" \
     && VPN_SCRIPT_URL="https://gitlab.com/openconnect/vpnc-scripts/raw/master/vpnc-script" \
     && mkdir -p /root-out/etc/vpnc \
-    && curl -L ${VPN_SCRIPT_URL} /root-out/etc/vpnc/vpnc-script
+    && curl -L ${VPN_SCRIPT_URL} -o /root-out/etc/vpnc/vpnc-script
 
 ADD rootfs /root-out
 RUN chmod +x /root-out/etc/vpnc/vpnc-script \
