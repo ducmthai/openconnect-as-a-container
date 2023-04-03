@@ -110,7 +110,7 @@ docker run -d \
 -v "$(pwd)"/vpntoken:/vpn/token \
 -p 3128:3128 \
 -p 3129:3129 \
-ducmthai/openconnect
+ducmthai/openconnect:latest
 ```
 
 ### Start with `docker-compose`
