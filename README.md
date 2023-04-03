@@ -1,7 +1,7 @@
 # AnyConnect, Pulse and PAN container with proxies
 ## Changelog
 
-- v20230402: Update to `s6-overlay` version 3. **Use new build argument to specify its architecture (`S6_OVERLAY_ARCH`)**. It also uses `x86_64` instead of `amd64.` Latest [`vpnc-script`](https://gitlab.com/openconnect/vpnc-scripts)
+- v20230402: Update to `s6-overlay` version 3. Latest [`vpnc-script`](https://gitlab.com/openconnect/vpnc-scripts)
 - v20220603: Add a `build.sh` script. Set s6-overlay version to 2.2.0.3. Update to version 3 pending.
 - v20210813: Fix mount vpnpassd typo in `docker-compose.yml`. Add a note regarding password editing with `vim.`
 - v20210405: Set dynamic token through mounted file to `/vpn/token` for 2FA users. Rename `PASSWORD1` and `PASSWORD2` to `PASSWORD` and `TOKEN`, respectively. Add `dnsmasq`.
@@ -21,31 +21,24 @@ An [s6-overlay](https://github.com/just-containers/s6-overlay)ed Alpine Linux co
 - The container starts in [`privileged`](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) mode in order to avoid the `read-only file system` [error](https://serverfault.com/questions/878443/when-running-vpnc-in-docker-get-cannot-open-proc-sys-net-ipv4-route-flush). Please proceed with your own **risk**.
 
 ## Build
-### Set architecture
-The container uses pre-built `s6-overlay` binaries. By default, it uses `x86_64` s6 binaries. If your platform is different, modify `S6_OVERLAY_ARCH` argument value in `Dockerfile` as follow:
-
-```Dockerfile
-ARG S6_OVERLAY_ARCH=<your_platform_arch>
-```
-See [s6-overlay release page](https://github.com/just-containers/s6-overlay/releases/latest) to see if your platform is available. The argument can be set using `--build-arg` as below.
 
 ### Build the image
 
-Use `build.sh`:
+Use `build.sh` with an `s6-overlay` version. This version parameter is optional.
 
 ```Shell
-sh build.sh x86_64
+sh build.sh 3.1.4.2
 ```
 
 Or, build the image with `docker` with BuiltKit enabled:
 
 ```Shell
-DOCKER_BUILDKIT=1 docker build --build-arg S6_OVERLAY_ARCH=x86_64 -t ducmthai/openconnect:latest .
+DOCKER_BUILDKIT=1 docker build --build-arg S6_OVERLAY_VERSION="3.1.4.2" -t ducmthai/openconnect:latest .
 ```
 
 Alternatively, use `docker-compose build`:
 ```Shell
-COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build --build-arg S6_OVERLAY_ARCH=x86_64
+COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build --build-arg S6_OVERLAY_VERSION="3.1.4.2"
 ```
 
 ## Starting the VPN Proxy

@@ -17,6 +17,7 @@ RUN apk add --update \
       bash \
       linux-headers \
       xz \
+      curl \
     && cd / \
     && tar -xf ${THREE_PROXY_BRANCH}.tar.gz \
     && cd 3proxy-${THREE_PROXY_BRANCH} \
@@ -26,13 +27,19 @@ RUN apk add --update \
 
 # set version for s6 overlay
 ARG S6_OVERLAY_VERSION="3.1.4.2"
-ARG S6_OVERLAY_ARCH="x86_64"
 
 # add s6 overlay
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
-RUN tar -C /root-out -Jxpf /tmp/s6-overlay-noarch.tar.xz
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz /tmp
-RUN tar -C /root-out -Jxpf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz
+RUN S6_OVERLAY_URL_PREFIX="https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}" \
+    && S6_OVERLAY_ARCH="$(uname -m)" \
+    && S6_OVERLAY_NOARCH_TAR_FILE="s6-overlay-noarch.tar.xz" \
+    && S6_OVERLAY_ARCH_TAR_FILE="s6-overlay-${S6_OVERLAY_ARCH}.tar.xz" \
+    && S6_OVERLAY_NOARCH_URL="${S6_OVERLAY_URL_PREFIX}/${S6_OVERLAY_NOARCH_TAR_FILE}" \
+    && S6_OVERLAY_ARCH_URL="${S6_OVERLAY_URL_PREFIX}/${S6_OVERLAY_ARCH_TAR_FILE}" \
+    && echo "Downloading from ${S6_OVERLAY_NOARCH_URL} and ${S6_OVERLAY_ARCH_URL}" \
+    && curl -L ${S6_OVERLAY_NOARCH_URL} -o /tmp/${S6_OVERLAY_NOARCH_TAR_FILE} \
+    && curl -L ${S6_OVERLAY_ARCH_URL} -o /tmp/${S6_OVERLAY_ARCH_TAR_FILE} \
+    && tar -C /root-out -Jxpf /tmp/${S6_OVERLAY_NOARCH_TAR_FILE} \
+    && tar -C /root-out -Jxpf /tmp/${S6_OVERLAY_ARCH_TAR_FILE}
 
 # Update latest vpnc-script
 ADD https://gitlab.com/openconnect/vpnc-scripts/raw/master/vpnc-script /root-out/etc/vpnc/vpnc-script
