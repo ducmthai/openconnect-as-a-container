@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv bash
+#!/command/with-contenv bash
 set -e -u -o pipefail
 
 if [ ! -r ${OC_CFG} ]; then
@@ -40,7 +40,7 @@ echo "Starting openconnect..."
 (
   echo -e "${PASSWORD}\n${TOKEN}"
   read -s
-) | openconnect ${SERVER} --pid-file=${OC_PID} --user=${USERNAME} --passwd-on-stdin
+) | openconnect ${SERVER} --pid-file=${OC_PID} --user=${USERNAME} --passwd-on-stdin --no-dtls
 
 sleep infinity &
 
