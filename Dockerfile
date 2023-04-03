@@ -25,8 +25,8 @@ RUN apk add --update \
 
 
 # set version for s6 overlay
-ARG S6_OVERLAY_VERSION="3.1.4.1"
-ARG S6_OVERLAY_ARCH="amd64"
+ARG S6_OVERLAY_VERSION="3.1.4.2"
+ARG S6_OVERLAY_ARCH="x86_64"
 
 # add s6 overlay
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
