@@ -35,14 +35,23 @@ RUN S6_OVERLAY_URL_PREFIX="https://github.com/just-containers/s6-overlay/release
     && S6_OVERLAY_ARCH_TAR_FILE="s6-overlay-${S6_OVERLAY_ARCH}.tar.xz" \
     && S6_OVERLAY_NOARCH_URL="${S6_OVERLAY_URL_PREFIX}/${S6_OVERLAY_NOARCH_TAR_FILE}" \
     && S6_OVERLAY_ARCH_URL="${S6_OVERLAY_URL_PREFIX}/${S6_OVERLAY_ARCH_TAR_FILE}" \
+    && S6_OVERLAY_SYMLINKS_NOARCH_TAR_FILE=s6-overlay-symlinks-noarch.tar.xz \
+    && S6_OVERLAY_SYMLINKS_ARCH_TAR_FILE=s6-overlay-symlinks-arch.tar.xz \
+    && S6_OVERLAY_SYMLINKS_NOARCH_URL="${S6_OVERLAY_URL_PREFIX}/${S6_OVERLAY_SYMLINKS_NOARCH_TAR_FILE}" \
+    && S6_OVERLAY_SYMLINKS_ARCH_URL="${S6_OVERLAY_URL_PREFIX}/${S6_OVERLAY_SYMLINKS_ARCH_TAR_FILE}" \
     && echo "Downloading from ${S6_OVERLAY_NOARCH_URL} and ${S6_OVERLAY_ARCH_URL}" \
     && curl -L ${S6_OVERLAY_NOARCH_URL} -o /tmp/${S6_OVERLAY_NOARCH_TAR_FILE} \
     && curl -L ${S6_OVERLAY_ARCH_URL} -o /tmp/${S6_OVERLAY_ARCH_TAR_FILE} \
+    && curl -L ${S6_OVERLAY_SYMLINKS_NOARCH_URL} -o /tmp/${S6_OVERLAY_SYMLINKS_NOARCH_TAR_FILE} \
+    && curl -L ${S6_OVERLAY_SYMLINKS_ARCH_URL} /tmp/${S6_OVERLAY_SYMLINKS_ARCH_TAR_FILE} \    
     && tar -C /root-out -Jxpf /tmp/${S6_OVERLAY_NOARCH_TAR_FILE} \
-    && tar -C /root-out -Jxpf /tmp/${S6_OVERLAY_ARCH_TAR_FILE}
-
-# Update latest vpnc-script
-ADD https://gitlab.com/openconnect/vpnc-scripts/raw/master/vpnc-script /root-out/etc/vpnc/vpnc-script
+    && tar -C /root-out -Jxpf /tmp/${S6_OVERLAY_ARCH_TAR_FILE} \
+    && tar -C /root-out -Jxpf /tmp/${S6_OVERLAY_SYMLINKS_NOARCH_TAR_FILE} \    
+    && tar -C /root-out -Jxpf /tmp/${S6_OVERLAY_SYMLINKS_ARCH_TAR_FILE} \
+    && echo "Download latest vpnc-script" \
+    && VPN_SCRIPT_URL="https://gitlab.com/openconnect/vpnc-scripts/raw/master/vpnc-script" \
+    && mkdir -p /root-out/etc/vpnc \
+    && curl -L ${VPN_SCRIPT_URL} /root-out/etc/vpnc/vpnc-script
 
 ADD rootfs /root-out
 RUN chmod +x /root-out/etc/vpnc/vpnc-script \
@@ -51,12 +60,6 @@ RUN chmod +x /root-out/etc/vpnc/vpnc-script \
     && chmod +x /root-out/etc/vpnc/vpnc-script \
     && chmod +x /root-out/etc/cont-init.d/01-contcfg \
     && chmod +x /root-out/etc/cont-init.d/30-occfg
-
-# add s6 optional symlinks
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-symlinks-noarch.tar.xz /tmp
-RUN tar -C /root-out -Jxpf /tmp/s6-overlay-symlinks-noarch.tar.xz
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-symlinks-arch.tar.xz /tmp
-RUN tar -C /root-out -Jxpf /tmp/s6-overlay-symlinks-arch.tar.xz
 
 FROM alpine:${ALPINE_VERSION}
 ARG THREE_PROXY_BRANCH
