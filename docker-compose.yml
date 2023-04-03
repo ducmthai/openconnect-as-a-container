@@ -47,5 +47,5 @@ services:
 
 networks:
   openconnect:
-    external:
-      name: openconnect
+    name: openconnect
+    external: true
