@@ -80,7 +80,9 @@ Passwords can be set using a `FILE__` prefixed environment variable where its va
 ```Shell
 FILE__PASSWORD=/vpn/passwd
 ```
-**Note**: If you edit the file with `vim,` please ensure to do `:set nofixeol` in `vim` before saving it or else a newline will be added after the password.
+**Note**: If you edit the file with `vim,` and you set `:set nofixendofline` OR using `echo -n <password> > vpnpasswd` you must use `echo -e "${PASSWORD}\n${TOKEN}"` in [openconnect run file](rootfs/etc/services.d/openconnect/run).
+
+To check if you password file has no newline after the password, `cat vpnpasswd` will add an extra `%` after the content of that file. If the result does not have an extra `%` character, you're good to go with the default [openconnect run file](rootfs/etc/services.d/openconnect/run).
 
 ### Create a docker network
 Before starting the container, please create a docker network for it:

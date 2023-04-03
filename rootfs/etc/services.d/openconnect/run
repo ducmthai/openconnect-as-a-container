@@ -38,7 +38,12 @@ fi
 
 echo "Starting openconnect..."
 (
-  echo -e "${PASSWORD}\n${TOKEN}"
+  # Assume there is a newline after the password in /vpn/passwd
+  # To check if there is a newline after the password, `cat` command does not show an extra `%` after it
+  # If your platform or vim setup does not add a newline after the password, use this:
+  # echo -e "${PASSWORD}\n${TOKEN}"
+
+  echo -e "${PASSWORD}${TOKEN}"
   read -s
 ) | openconnect ${SERVER} --pid-file=${OC_PID} --user=${USERNAME} --passwd-on-stdin --no-dtls
 
