@@ -7,6 +7,6 @@ if [[ $# -ne 1 ]] ; then
   exit 1
 else
   CPU_ARCH="$1"
-  docker-compose build --build-arg s6_arch=${CPU_ARCH}
+  docker-compose build --build-arg S6_OVERLAY_ARCH=${CPU_ARCH}
   exit 0
 fi
