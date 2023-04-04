@@ -1,5 +1,4 @@
 #!/command/with-contenv bash
-set -e -u -o pipefail
 
 if [ ! -r ${OC_CFG} ]; then
   echo "Could not load config file from /vpn/vpn.config. Please check your volume config" 1>&2
@@ -35,15 +34,16 @@ if [ ${DYNAMIC_TOKEN} = true ]; then
   echo "Resetting token for next use..."
   echo "" > /vpn/token
 fi
+# Remove trailing newline, if any
+SANED_VARS=( PASSWORD TOKEN )
+for i in "${SANED_VARS[@]}"
+do
+  export "$i"="${!i%$'\n'}"
+done
 
 echo "Starting openconnect..."
 (
-  # Assume there is a newline after the password in /vpn/passwd
-  # To check if there is a newline after the password, `cat` command does not show an extra `%` after it
-  # If your platform or vim setup does not add a newline after the password, use this:
-  # echo -e "${PASSWORD}\n${TOKEN}"
-
-  echo -e "${PASSWORD}${TOKEN}"
+  echo -e "${PASSWORD}\n${TOKEN}\n"
   read -s
 ) | openconnect ${SERVER} --pid-file=${OC_PID} --user=${USERNAME} --passwd-on-stdin --no-dtls
 
