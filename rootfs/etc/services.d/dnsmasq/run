@@ -1,6 +1,4 @@
 #!/command/with-contenv sh
-set -e -u -o pipefail
-
 while ! $(ip link | grep -q tun0); do sleep 1; done
 
 echo "Starting dnsmasq..."
