@@ -62,7 +62,7 @@ The environment variables needed for exposing the proxy to the local network:
 - `PROXY_PORT`: If set, the SOCKS5 proxy is enabled and exposed through this port
 - `HTTP_PROXY_PORT`: If set, the HTTP proxy is enabled and exposed through this port
 - `LOCAL_NETWORK`: The CIDR mask of the local IP addresses (e.g. 192.168.0.1/24, 10.1.1.0/24) which will be acessing the proxy. This is so the response to a request can be returned to the client (i.e. your browser).
-- `OPENSSL_CONF`: Custom OpenSSL3 configuration. Default value is `/etc/ssl/openssl.cnf`. This custom configuraton helps avoiding `routines::unsafe legacy renegotiation disabled` error with certain corporate VPN setups. If you don't want `UnsafeLegacyRenegotiation`, simply remove or comment out this variable.
+- `OPENSSL_CONF`: Custom OpenSSL3 configuration. Default value is `/etc/ssl/openssl.cnf`. This custom configuraton helps avoiding `routines::unsafe legacy renegotiation disabled` error with certain corporate VPN setups. If you don't want `UnsafeLegacyRenegotiation`, simply remove or comment out this variable. [Reference](https://github.com/dotnet/dotnet-docker/issues/4332).
 - `EXT_IP`: Your external IP. Used only for healthcheck. You can get your current external IP on [ifconfig.co](https://ifconfig.co/ip)
 
 These variables can be specified in the command line or in the `.env` file in the case of `docker-compose`.
