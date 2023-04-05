@@ -1,6 +1,7 @@
 # AnyConnect, Pulse and PAN container with proxies
 ## Changelog
 
+- v20230405: Add an override OpenSSL3 configuration to get around `routines::unsafe legacy renegotiation disabled` error.
 - v20230402: Update to `s6-overlay` version 3. Latest [`vpnc-script`](https://gitlab.com/openconnect/vpnc-scripts)
 - v20220603: Add a `build.sh` script. Set s6-overlay version to 2.2.0.3. Update to version 3 pending.
 - v20210813: Fix mount vpnpassd typo in `docker-compose.yml`. Add a note regarding password editing with `vim.`
